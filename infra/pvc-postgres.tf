@@ -11,5 +11,6 @@ resource "kubernetes_persistent_volume_claim" "lab_postgres_pvc" {
         storage = "1Gi"
       }
     }
+    storage_class_name = ""
   }
 }
