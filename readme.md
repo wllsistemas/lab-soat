@@ -1,0 +1,107 @@
+
+## Build Imagem Docker
+- **Nginx**: executar comando à partir da raiz do projeto
+```bash
+  docker build -t wllsistemas/nginx_lab_soat:fase2 -f build/backend/Dockerfile-nginx .
+```
+- **PHP + Código Fonte**: executar comando à partir da raiz do projeto
+```bash
+  docker build -t wllsistemas/php_lab_soat:fase2 -f build/backend/Dockerfile .
+```
+
+## Deploy kubernetes Local
+
+Todos os manifestos kubernetes estão dentro da pasta **./k8s**, os manifestos foram nomeados para facilitar a ordem de execução.
+
+### Arquivos de Manifesto
+```bash
+  01-namespace.yaml
+  02-configmap.yaml
+  03-secret.yaml
+  04-secret-postgres.yaml
+  05-pv-postgres.yaml
+  06-pvc-postgres.yaml
+  07-svc-postgres.yaml
+  08-svc-php.yaml
+  09-svc-nginx.yaml
+  10-pod-postgres.yaml
+  11-pod-php.yaml
+  12-pod-nginx.yaml
+  13-hpa-ngix.yaml
+  metrics-server.yaml **
+```
+### Namespace kubernetes
+Para melhor organização do ambiente, todos os manifestos são criados dentro do namespace **lab-soat** através do manifesto **01-namespace.yaml**.
+
+### Pré-requisitos
+- docker >= 28.4.0
+- kubeadm >= 1.34.1
+- kubectl >= 1.32.2
+
+### Como Executar todos os manifestos
+Executar o comando abaixo à partir da raiz do projeto
+
+```bash
+  kubectl apply -f ./k8s
+```
+
+### Como Deletar todo o Ambiente
+Esse comando deleta todos os componentes do namespace **lab-soat**
+
+```bash
+  kubectl delete namespace lab-soat
+```
+
+### Portas de Acesso
+- **PHP-fpm**: 9000 (ClusterIP)
+- **PostgreSQL**: 5432 (ClusterIP)
+- **Nginx**: 31000 (NodePort)
+
+### Observações
+
+- As imagens buildadas estão no repositório [Docker Hub](https://hub.docker.com/repositories/wllsistemas)
+- O manifesto **metrics-server.yaml** foi necessário em nosso Ambiente local para criação dentro do namespace **kube-system** com args específico:
+```bash
+  - --kubelet-insecure-tls
+```
+
+## Deploy Terraform Local
+
+Todos os scripts **Terraform** estão dentro da pasta **./infra**.
+
+### Pré-requisitos
+- docker >= 28.4.0
+- kubeadm >= 1.34.1
+- kubectl >= 1.32.2
+- terraform >= 1.13.3
+
+### Navegar até o diretório dos scripts
+```bash
+  cd infra
+```
+
+### Inicializar terraform
+```bash
+  terraform init
+```
+
+### Executar comando de análise do código
+```bash
+  terraform plan
+```
+
+### Como Executar todos os scripts
+Executar o comando abaixo, passando como parâmetro o valor das variáveis contendo as TAGs das imagens no Docker Hub.
+
+```bash
+  terraform apply -auto-approve -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
+```
+
+**⚠️ Aviso:** O script `metrics-server.tf` contem deployments para criação de métricas que são usadas pelo script `hpa.tf`, após a primeira execução são criadas as métricas necessárias, se for necessário uma segunda execução de todos os scripts, serão exibidas mensagens como `metrics-server" already exists`.
+
+### Como Deletar todo o Ambiente
+Esse comando deleta todos os componentes
+
+```bash
+  terraform destroy -auto-approve -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
+```
