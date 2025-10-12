@@ -56,7 +56,11 @@ jobs:
         with:
           terraform_version: "latest"
 
-      - name: Initialize Terraform
+      - name: Destroy Terraform
+        run: terraform destroy -auto-approve -input=false -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
+        working-directory: ./infra
+
+      - name: Inicialização Terraform
         run: terraform init
         working-directory: ./infra
 
