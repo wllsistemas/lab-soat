@@ -1,4 +1,4 @@
-name: CI/CD PHP/Nginx, Docker e Kubernetes
+name: CI FIAP-Fase2
 
 on:
   push:
@@ -20,12 +20,12 @@ jobs:
 
       - name: Build e push da imagem PHP no Docker HUB
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2 -f build/Dockerfile .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2 -f build/backend/Dockerfile .
           docker push ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2
 
       - name: Build e push da imagem Nginx no Docker HUB
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2 -f build/Dockerfile-nginx .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2 -f build/backend/Dockerfile-nginx .
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2
 
   run_tests:
@@ -95,11 +95,11 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "✅ Sucesso no workflow FIPA-Fase2"
+          subject: "✅ Sucesso no workflow FIAP-Fase2"
           body: |
             Prezado William,
 
-            O workflow de CI/CD para PHP/Nginx em ${{ github.repository }} foi executado com sucesso.
+            O workflow FIAP-Fase2 em ${{ github.repository }} foi executado com sucesso.
 
             DETALHES
             - Status: Sucesso ✅
@@ -143,11 +143,11 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "❌ Falha no workflow FIPA-Fase2"
+          subject: "❌ Falha no workflow FIAP-Fase2"
           body: |
             Prezado William,
 
-            O workflow de CI/CD para PHP/Nginx em ${{ github.repository }} **FALHOU**!
+            O workflow FIAP-Fase2 em ${{ github.repository }} **FALHOU**!
 
             DETALHES:
             - Status: Falha ❌
