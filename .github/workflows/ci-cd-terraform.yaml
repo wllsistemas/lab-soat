@@ -58,17 +58,17 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-        working-directory: ./terraform
+        working-directory: ./infra
 
       - name: Terraform Plan
         id: plan
         run: terraform plan -input=false -out=tfplan -detailed-exitcode -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"  || [ $? -eq 2 ]
-        working-directory: ./terraform
+        working-directory: ./infra
 
       - name: Terraform Apply
         if: steps.plan.outputs.exitcode == '2'
         run: terraform apply -input=false tfplan
-        working-directory: ./terraform
+        working-directory: ./infra
 
       - name: No Terraform changes
         if: steps.plan.outputs.exitcode == '0'
