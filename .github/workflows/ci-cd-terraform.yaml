@@ -20,7 +20,7 @@ jobs:
 
       - name: Build e push da imagem PHP no Docker HUB
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2 -f build/Dockerfile-php .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2 -f build/Dockerfile .
           docker push ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2
 
       - name: Build e push da imagem Nginx no Docker HUB
@@ -95,7 +95,7 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "✅ Sucesso no workflow: CI/CD PHP/Nginx!"
+          subject: "✅ Sucesso no workflow FIPA-Fase2"
           body: |
             Prezado William,
 
@@ -143,7 +143,7 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "❌ Falha no workflow: CI/CD PHP/Nginx!"
+          subject: "❌ Falha no workflow FIPA-Fase2"
           body: |
             Prezado William,
 
