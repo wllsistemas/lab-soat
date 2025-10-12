@@ -56,10 +56,6 @@ jobs:
         with:
           terraform_version: "latest"
 
-      - name: Destroy Terraform
-        run: terraform destroy -auto-approve -input=false -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
-        working-directory: ./infra
-
       - name: Inicialização Terraform
         run: terraform init
         working-directory: ./infra
@@ -74,14 +70,15 @@ jobs:
         run: terraform apply -input=false tfplan
         working-directory: ./infra
 
-      - name: No Terraform changes
+      - name: Verificar mudanças no Terraform
         if: steps.plan.outputs.exitcode == '0'
         run: echo "Não existem mudanças detectadas no Terraform"
 
       - name: Verifique o status do rollout dos Deployments (opcional, para feedback extra)
         run: |
-          kubectl rollout status deployment/lab-php -n default --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
-          kubectl rollout status deployment/lab-nginx -n default --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
+          kubectl rollout status deployment/lab-soat-php -n default --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
+          kubectl rollout status deployment/lab-soat-nginx -n default --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
+          kubectl rollout status deployment/lab-soat-postgres -n default --timeout=5m || { echo "Postgres Deployment rollout falhou ou houve timeout!"; exit 1; }
 
       - name: Limpar Kubeconfig temporário (segurança)
         if: always()
