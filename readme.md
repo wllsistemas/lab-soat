@@ -1,5 +1,18 @@
 
-## 🐳 Build Imagem Docker
+## 🐳 Deploy da Aplicação
+
+- Foram escritos 2 arquivos Dockerfile que estão na pasta **./build/backend**
+    1. **nginx**
+    2. **php:8.4-fpm-alpine3.22**
+
+> [!NOTE]
+> O container PostgreSQL é criado a partir de uma imagem no Docker Hub **postgres:17.5**.
+
+> [!NOTE]
+> O banco de dados da aplicação é criado após o container do **PHP** ser executado, as rotinas de **migrations** e **seeders** são executadas via comando `artisan` do laravel durante a inicialização do container, através do script **/build/backend/startup.sh**.
+
+
+#### Build Imagem Docker
 - **Nginx**: executar comando à partir da raiz do projeto
 ```bash
   docker build -t wllsistemas/nginx_lab_soat:fase2 -f build/backend/Dockerfile-nginx .
@@ -95,7 +108,7 @@ Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 ### Recursos do Cluster
 
 > [!NOTE]
-> É necessário criar recursos a nível de cluster, esses recursos estão na subpasta **./infra/base_cluster** e precisam ser criados apenas na primeira execução.
+> É necessário criar recursos de métricas em nível de cluster, esses recursos estão na subpasta **./infra/base_cluster** e precisam ser criados apenas na primeira execução.
 
 #### Navegar até o diretório dos scripts
 ```bash
@@ -160,7 +173,7 @@ No branch `main` são efetuados merges mediante aprovação dos PRs.
 Ao executar o merge, é disparada a pipeline `ci.yaml` que executa:
 - Testes Unitários e Integração
 - Build da Imagem no Docker Hub
-- Envia e-mail customizado em caso de Sucesso ou Falha
+- Envia e-mail customizado em caso de Sucesso ou Falha 
 
 #### 3. Execução da Pipeline CD
 Após a execução da pipeline CD , é disparada a pipeline `cd.yaml` que executa:
