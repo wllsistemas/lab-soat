@@ -10,7 +10,7 @@
             <text outputFile="var/coverage.txt"/>
         </report>
         <include>
-            <directory>app</directory>
+            <directory suffix=".php">./app</directory>
         </include>
     </coverage>
     
