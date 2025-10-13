@@ -9,7 +9,7 @@
   docker build -t wllsistemas/php_lab_soat:fase2 -f build/backend/Dockerfile .
 ```
 
-## Deploy kubernetes Local
+## kubernetes
 
 Todos os manifestos kubernetes estão dentro da pasta **./k8s**, os manifestos foram nomeados para facilitar a ordem de execução.
 
@@ -45,17 +45,32 @@ Executar o comando abaixo à partir da raiz do projeto
   kubectl apply -f ./k8s
 ```
 
+### Listando Serviços e Portas
+Executar o comando abaixo à partir da raiz do projeto, passando o namespace **lab-soat**
+
+```bash
+  kubectl get services -n lab-soat
+```
+
+#### Portas de Acesso
+| Service | Port | Type |
+|---|---|---|
+|svc-php|9000|ClusterIP|
+|postgres|5432|ClusterIP|
+|svc-ngix|31000|NodePort|
+
+### URL de acesso Health Check
+```bash
+  http://localhost:31000/api/ping
+```
+
+
 ### Como Deletar todo o Ambiente
 Esse comando deleta todos os componentes do namespace **lab-soat**
 
 ```bash
   kubectl delete namespace lab-soat
 ```
-
-### Portas de Acesso
-- **PHP-fpm**: 9000 (ClusterIP)
-- **PostgreSQL**: 5432 (ClusterIP)
-- **Nginx**: 31000 (NodePort)
 
 ### Observações
 
@@ -65,7 +80,7 @@ Esse comando deleta todos os componentes do namespace **lab-soat**
   - --kubelet-insecure-tls
 ```
 
-## Deploy Terraform Local
+## Terraform
 
 Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 
@@ -105,3 +120,5 @@ Esse comando deleta todos os componentes
 ```bash
   terraform destroy -auto-approve -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
 ```
+
+## CI/CD GitHub Actions
