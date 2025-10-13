@@ -84,6 +84,9 @@ Esse comando deleta todos os componentes do namespace **lab-soat**
 
 Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 
+> [!NOTE]
+> É necessário criar recursos a nível de cluster, esses recursos estão na subpasta **./infra/base_cluster**.
+
 ### ✔️ Pré-requisitos
 - docker >= 28.4.0
 - kubeadm >= 1.34.1
