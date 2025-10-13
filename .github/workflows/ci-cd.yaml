@@ -75,8 +75,8 @@ jobs:
             cd "$MANIFESTS_DIR"
 
             # 3. Atualiza as tags das imagens nos manifests de Deployment
-            PHP_DEPLOYMENT_FILE="pod-php.yaml"
-            NGINX_DEPLOYMENT_FILE="pod-nginx.yaml"
+            PHP_DEPLOYMENT_FILE="11-pod-php.yaml"
+            NGINX_DEPLOYMENT_FILE="12-pod-nginx.yaml"
 
             if [ -f "$PHP_DEPLOYMENT_FILE" ]; then
               sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:.*|image: ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2|g" "$PHP_DEPLOYMENT_FILE"
@@ -97,8 +97,8 @@ jobs:
             kubectl apply -f .
 
             # 5. Verifique o status do rollout de AMBOS os Deployments
-            kubectl rollout status deployment/lab-php --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
-            kubectl rollout status deployment/lab-nginx --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
+            kubectl rollout status deployment/lab-soat-php --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
+            kubectl rollout status deployment/lab-soat-nginx --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
 
             # 6. Limpa o diretório temporário dos manifests na VPS
             rm -rf /tmp/k8s-deploy-manifests
