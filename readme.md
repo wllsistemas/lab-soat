@@ -124,7 +124,7 @@ Esse comando deleta todos os componentes
 ## Pipeline GitHub Actions
 
 #### 1. Aprovação de um PR para merge com a `main`
-No branch `main` são efetuados apenas merges mediante aprovação dos PRs.
+No branch `main` são efetuados merges mediante aprovação dos PRs.
 
 #### 2. Execução da Pipeline CI
 Ao executar o merge, é disparada a pipeline `ci.yaml` que executa:
@@ -133,7 +133,7 @@ Ao executar o merge, é disparada a pipeline `ci.yaml` que executa:
 - Envia e-mail customizado em caso de Sucesso ou Falha
 
 #### 3. Execução da Pipeline CD
-Após a execução com sucesso do CI , é disparada a pipeline `cd.yaml` que executa:
+Após a execução da pipeline CD , é disparada a pipeline `cd.yaml` que executa:
 - Valida a execução da pipeline CI
 - Copia os manifestos kubernetes para VPS
 - Aplica os manifestos na VPS, atualizando aplicação
