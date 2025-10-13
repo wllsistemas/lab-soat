@@ -74,7 +74,9 @@ Esse comando deleta todos os componentes do namespace **lab-soat**
 
 > [!NOTE]
 > As imagens buildadas estão no repositório [Docker Hub](https://hub.docker.com/repositories/wllsistemas)
-> O manifesto **metrics-server.yaml** foi necessário em nosso Ambiente local para criação
+
+> [!WARNING]
+> O manifesto **metrics-server.yaml** foi necessário em nosso Ambiente para criação dos recursos de métricas utilizados pelo **hpa**, ele insere no args a flag abaixo.
 
 ```bash
   - --kubelet-insecure-tls
@@ -90,7 +92,7 @@ Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 - kubectl >= 1.32.2
 - terraform >= 1.13.3
 
-### Recursos Cluster
+### Recursos do Cluster
 
 > [!NOTE]
 > É necessário criar recursos a nível de cluster, esses recursos estão na subpasta **./infra/base_cluster** e precisam ser criados apenas na primeira execução.
@@ -116,6 +118,9 @@ Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 ```
 
 ### Recursos da Aplicação
+
+> [!NOTE]
+> Recursos da aplicação setão na pasta **./infra** e podem ser destruídos com o comando `destroy`.
 
 #### Navegar até o diretório dos scripts
 ```bash
