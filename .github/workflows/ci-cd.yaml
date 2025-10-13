@@ -38,7 +38,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2
 
   copy_manifests_to_kubernetes:
-    needs: run_tests
+    needs: build_and_push_images
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
