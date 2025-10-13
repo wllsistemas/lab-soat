@@ -74,24 +74,6 @@ jobs:
             MANIFESTS_DIR="/tmp/k8s-deploy-manifests/kubernetes"
             cd "$MANIFESTS_DIR"
 
-            # 3. Atualiza as tags das imagens nos manifests de Deployment
-            PHP_DEPLOYMENT_FILE="11-pod-php.yaml"
-            NGINX_DEPLOYMENT_FILE="12-pod-nginx.yaml"
-
-            if [ -f "$PHP_DEPLOYMENT_FILE" ]; then
-              sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:.*|image: ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2|g" "$PHP_DEPLOYMENT_FILE"
-              echo "Atualizado TAG na imagem PHP $PHP_DEPLOYMENT_FILE"
-            else
-              echo "Atenção:: $PHP_DEPLOYMENT_FILE não encontrado. TAG da imagem PHP não será atualizada."
-            fi
-
-            if [ -f "$NGINX_DEPLOYMENT_FILE" ]; then
-              sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:.*|image: ${{ secrets.DOCKER_USERNAME }}/nginx_lab_soat:fase2|g" "$NGINX_DEPLOYMENT_FILE"
-              echo "Atualizado TAG na imagem Nginx $NGINX_DEPLOYMENT_FILE"
-            else
-              echo "Atenção:: $NGINX_DEPLOYMENT_FILE não encontrado. TAG da imagem Nginx não será atualizada."
-            fi
-
             # 4. Aplica os manifests um por um na ordem definida
             echo "Aplicando manifests..."
             kubectl apply -f .
