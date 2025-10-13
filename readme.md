@@ -13,7 +13,7 @@
 
 Todos os manifestos kubernetes estão dentro da pasta **./k8s**, os manifestos foram nomeados para facilitar a ordem de execução.
 
-### 📜 Arquivos de Manifesto
+#### Arquivos de Manifesto
 ```bash
   01-namespace.yaml
   02-configmap.yaml
@@ -33,49 +33,49 @@ Todos os manifestos kubernetes estão dentro da pasta **./k8s**, os manifestos f
 ### Namespace kubernetes
 Para melhor organização do ambiente, todos os manifestos são criados dentro do namespace **lab-soat** através do manifesto **01-namespace.yaml**.
 
-### ✔️ Pré-requisitos
+### Pré-requisitos
 - docker >= 28.4.0
 - kubeadm >= 1.34.1
 - kubectl >= 1.32.2
 
-### 🚀 Como Executar todos os manifestos
+### Como Executar todos os manifestos
 Executar o comando abaixo à partir da raiz do projeto
 
 ```bash
   kubectl apply -f ./k8s
 ```
 
-### 📊 Listando Serviços e Portas
+### Listando Serviços e Portas
 Executar o comando abaixo à partir da raiz do projeto, passando o namespace **lab-soat**
 
 ```bash
   kubectl get services -n lab-soat
 ```
 
-#### 🚪 Portas de Acesso
+#### Portas de Acesso
 | Service | Port | Type |
 |---|---|---|
 |svc-php|9000|ClusterIP|
 |postgres|5432|ClusterIP|
 |svc-ngix|31000|NodePort|
 
-### ❤️‍🩹 URL de acesso Health Check
+### URL de acesso Health Check
 ```bash
   http://localhost:31000/api/ping
 ```
 
 
-### 🗑️ Como Deletar todo o Ambiente
+### Como Deletar todo o Ambiente
 Esse comando deleta todos os componentes do namespace **lab-soat**
 
 ```bash
   kubectl delete namespace lab-soat
 ```
 
-### 💡 Observações
+> [!NOTE]
+> As imagens buildadas estão no repositório [Docker Hub](https://hub.docker.com/repositories/wllsistemas)
+> O manifesto **metrics-server.yaml** foi necessário em nosso Ambiente local para criação
 
-- As imagens buildadas estão no repositório [Docker Hub](https://hub.docker.com/repositories/wllsistemas)
-- O manifesto **metrics-server.yaml** foi necessário em nosso Ambiente local para criação dentro do namespace **kube-system** com args específico:
 ```bash
   - --kubelet-insecure-tls
 ```
@@ -84,40 +84,62 @@ Esse comando deleta todos os componentes do namespace **lab-soat**
 
 Todos os scripts **Terraform** estão dentro da pasta **./infra**.
 
-> [!NOTE]
-> É necessário criar recursos a nível de cluster, esses recursos estão na subpasta **./infra/base_cluster**.
-
-### ✔️ Pré-requisitos
+### Pré-requisitos
 - docker >= 28.4.0
 - kubeadm >= 1.34.1
 - kubectl >= 1.32.2
 - terraform >= 1.13.3
 
-### 📁 Navegar até o diretório dos scripts
+### Recursos Cluster
+
+> [!NOTE]
+> É necessário criar recursos a nível de cluster, esses recursos estão na subpasta **./infra/base_cluster** e precisam ser criados apenas na primeira execução.
+
+#### Navegar até o diretório dos scripts
 ```bash
-  cd infra
+  cd infra/base_cluster
 ```
 
-### ✨ Inicializar terraform
+#### Inicializar terraform
 ```bash
   terraform init
 ```
 
-### 🔍 Executar comando de análise do código
+#### Executar comando de análise do código
 ```bash
   terraform plan
 ```
 
-### 🚀 Como Executar todos os scripts
+#### Como Executar todos os scripts
+```bash
+  terraform apply -auto-approve
+```
+
+### Recursos da Aplicação
+
+#### Navegar até o diretório dos scripts
+```bash
+  cd infra
+```
+
+#### Inicializar terraform
+```bash
+  terraform init
+```
+
+#### Executar comando de análise do código
+```bash
+  terraform plan
+```
+
+#### Como Executar todos os scripts
 Executar o comando abaixo, passando como parâmetro o valor das variáveis contendo as TAGs das imagens no Docker Hub.
 
 ```bash
   terraform apply -auto-approve -var="php_image_tag=fase2" -var="nginx_image_tag=fase2"
 ```
 
-**⚠️ Aviso:** O script `metrics-server.tf` contem deployments para criação de métricas que são usadas pelo script `hpa.tf`, após a primeira execução são criadas as métricas necessárias, se for necessário uma segunda execução de todos os scripts, serão exibidas mensagens como `metrics-server" already exists`.
-
-### 🗑️ Como Deletar todo o Ambiente
+#### Como Deletar todo o Ambiente
 Esse comando deleta todos os componentes
 
 ```bash
@@ -126,16 +148,16 @@ Esse comando deleta todos os componentes
 
 ## 🚀 Pipeline GitHub Actions
 
-#### ✅ 1. Aprovação de um PR para merge com a `main`
+#### 1. Aprovação de um PR para merge com a `main`
 No branch `main` são efetuados merges mediante aprovação dos PRs.
 
-#### ⚙️ 2. Execução da Pipeline CI
+#### 2. Execução da Pipeline CI
 Ao executar o merge, é disparada a pipeline `ci.yaml` que executa:
 - Testes Unitários e Integração
 - Build da Imagem no Docker Hub
 - Envia e-mail customizado em caso de Sucesso ou Falha
 
-#### ⚙️ 3. Execução da Pipeline CD
+#### 3. Execução da Pipeline CD
 Após a execução da pipeline CD , é disparada a pipeline `cd.yaml` que executa:
 - Valida a execução da pipeline CI
 - Copia os manifestos kubernetes para VPS
