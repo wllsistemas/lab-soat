@@ -1,6 +1,6 @@
 resource "kubernetes_horizontal_pod_autoscaler_v2" "hpa_nginx" {
   metadata {
-    name = "lab-hpa-nginx"
+    name = "lab-hpa-nginx" 
     namespace = kubernetes_namespace.lab_soat_terraform.metadata[0].name
   }
 
@@ -19,7 +19,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "hpa_nginx" {
         name = "cpu"
         target {
           type               = "Utilization"
-          average_utilization = 20
+          average_utilization = 15
         }
       }
     }
@@ -30,7 +30,7 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "hpa_nginx" {
         name = "memory"
         target {
           type          = "AverageValue"
-          average_value = "20Mi" 
+          average_value = "15Mi" 
         }
       }
     }
