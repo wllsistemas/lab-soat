@@ -12,9 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: List files to debug Composer.json location
-        run: ls -R
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -25,20 +22,22 @@ jobs:
 
       - name: Lendo diretório de cache do Composer
         id: composer-cache
-        working-directory: build/backend
+        working-directory: ./backend
         run: echo "::set-output name=dir::$(composer config cache-dir)"
 
       - name: Analisando cache do Composer
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Instalado dependências via Composer
+        working-directory: ./backend
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Criando arquivo .env para testes
+        working-directory: ./backend
         run: |
           cp .env.example .env
           # Se os testes precisarem de um banco de dados, você pode configurar um SQLite em memória ou em arquivo
@@ -47,12 +46,15 @@ jobs:
           sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env # SQLite em memória
 
       - name: Gerando application key
+        working-directory: ./backend
         run: php artisan key:generate
 
       - name: Executando migrações para testes
+        working-directory: ./backend
         run: php artisan migrate --env=testing --force
 
       - name: Executando Testes Laravel
+        working-directory: ./backend
         run: php artisan test
 
   build_and_push_images:
