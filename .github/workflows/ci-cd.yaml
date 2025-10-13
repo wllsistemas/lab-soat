@@ -79,8 +79,9 @@ jobs:
             kubectl apply -f .
 
             # 5. Verifique o status do rollout de AMBOS os Deployments
-            kubectl rollout status deployment/lab-soat-php --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
-            kubectl rollout status deployment/lab-soat-nginx --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
+            kubectl rollout status deployment/lab-soat-php -n lab-soat --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
+            kubectl rollout status deployment/lab-soat-nginx -n lab-soat --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
+            kubectl rollout status deployment/lab-soat-postgres -n lab-soat --timeout=5m || { echo "Postgres Deployment rollout falhou ou houve timeout!"; exit 1; }
 
             # 6. Limpa o diretório temporário dos manifests na VPS
             rm -rf /tmp/k8s-deploy-manifests
