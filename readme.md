@@ -167,8 +167,10 @@ Esse comando deleta todos os componentes
 ## 📈 HPA (HorizontalPodAutoscaler) 
 Escrevemos um manifesto kubernetes `13-hpa-nginx.yaml` para automatizar o escalonamento horizontal dos pods **lab-soat-nginx** com base em métricas de utilização.
 
-#### Utilização de CPU: 15%
-#### Média de Consumo Memória RAM: 15Mi (MegaBytes)
+| Métrica | Valor | Und Medida |
+|---|---|---|
+| Utilização de CPU | 15 | % |
+|Média de Consumo Memória RAM| 15 | MegaBytes |
 
 O HPA garante que o Deployment **lab-soat-nginx** tenha entre 1 e 10 pods, escalando para cima se a utilização média da CPU exceder 15% (em relação ao request do pod) ou se o consumo médio de memória exceder 15Mi. O objetivo é manter a performance da aplicação otimizada, adicionando ou removendo pods conforme a demanda, sem intervenção manual
 
