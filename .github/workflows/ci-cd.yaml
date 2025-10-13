@@ -50,7 +50,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "kubernetes/"
+          source: "k8s/"
           target: "/tmp/k8s-deploy-manifests/"
 
   deploy_to_kubernetes:
@@ -74,10 +74,9 @@ jobs:
             MANIFESTS_DIR="/tmp/k8s-deploy-manifests/kubernetes"
             cd "$MANIFESTS_DIR"
 
-            # 4. Atualiza as tags das imagens nos manifests de Deployment
+            # 3. Atualiza as tags das imagens nos manifests de Deployment
             PHP_DEPLOYMENT_FILE="pod-php.yaml"
             NGINX_DEPLOYMENT_FILE="pod-nginx.yaml"
-            POSTGRES_DEPLOYMENT_FILE="pod-postgres.yaml"
 
             if [ -f "$PHP_DEPLOYMENT_FILE" ]; then
               sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:.*|image: ${{ secrets.DOCKER_USERNAME }}/php_lab_soat:fase2|g" "$PHP_DEPLOYMENT_FILE"
@@ -93,18 +92,18 @@ jobs:
               echo "Atenção:: $NGINX_DEPLOYMENT_FILE não encontrado. TAG da imagem Nginx não será atualizada."
             fi
 
-            # 5. Aplica os manifests um por um na ordem definida
+            # 4. Aplica os manifests um por um na ordem definida
             echo "Aplicando manifests..."
             kubectl apply -f .
 
-            # 6. Verifique o status do rollout de AMBOS os Deployments
+            # 5. Verifique o status do rollout de AMBOS os Deployments
             kubectl rollout status deployment/lab-php --timeout=5m || { echo "PHP Deployment rollout falhou ou houve timeout!"; exit 1; }
             kubectl rollout status deployment/lab-nginx --timeout=5m || { echo "Nginx Deployment rollout falhou ou houve timeout!"; exit 1; }
 
-            # 7. Limpa o diretório temporário dos manifests na VPS
+            # 6. Limpa o diretório temporário dos manifests na VPS
             rm -rf /tmp/k8s-deploy-manifests
 
-            # 8. Remove o kubeconfig temporário por segurança
+            # 7. Remove o kubeconfig temporário por segurança
             rm -rf ~/.kube
 
   send_success_notification:
