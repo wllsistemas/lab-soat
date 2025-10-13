@@ -11,8 +11,45 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run testes (Somente Exibição)
-        run: echo "Passando testes ..."
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, pdo_mysql, dom, filter, gd, iconv, json, simplexml
+          ini-values: post_max_size=256M, upload_max_filesize=256M
+          coverage: none
+
+      - name: Lendo diretório de cache do Composer
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-dir)"
+
+      - name: Analisando cache do Composer
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Instalado dependências via Composer
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Criando arquivo .env para testes
+        run: |
+          cp .env.example .env
+          # Se os testes precisarem de um banco de dados, você pode configurar um SQLite em memória ou em arquivo
+          # Sed para configurar SQLite para testes, se necessário:
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env # SQLite em memória
+
+      - name: Gerando application key
+        run: php artisan key:generate
+
+      - name: Executando migrações para testes
+        run: php artisan migrate --env=testing --force
+
+      - name: Executando Testes Laravel
+        run: php artisan test
 
   build_and_push_images:
     needs: run_tests
