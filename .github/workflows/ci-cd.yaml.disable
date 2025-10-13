@@ -1,9 +1,9 @@
-name: CI/CD PHP/Nginx, Docker e Kubernetes
+name: Pipeline CI/CD - FIAP Fase 2
 
 on:
   push:
     branches:
-      - main # Actions executada com push na branch main
+      - main
 
 jobs:
   run_tests:
@@ -28,7 +28,7 @@ jobs:
       - name: Analisando cache do Composer
         uses: actions/cache@v3
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }} 
+          path: ${{ env.COMPOSER_CACHE_DIR }}
           key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
