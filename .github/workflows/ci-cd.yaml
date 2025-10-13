@@ -71,7 +71,7 @@ jobs:
             export KUBECONFIG=~/.kube/config # Garante que kubectl use este arquivo
 
             # 2. Navega para o diretório onde os manifests foram copiados
-            MANIFESTS_DIR="/tmp/k8s-deploy-manifests/kubernetes"
+            MANIFESTS_DIR="/tmp/k8s-deploy-manifests/k8s"
             cd "$MANIFESTS_DIR"
 
             # 4. Aplica os manifests um por um na ordem definida
