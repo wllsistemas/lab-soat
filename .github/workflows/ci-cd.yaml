@@ -18,7 +18,7 @@ jobs:
           php-version: "8.4"
           extensions: mbstring, pdo_mysql, dom, filter, gd, iconv, json, simplexml
           ini-values: post_max_size=256M, upload_max_filesize=256M
-          coverage: none
+          coverage: pcov
 
       - name: Lendo diretório de cache do Composer
         id: composer-cache
