@@ -12,6 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: List files to debug Composer.json location
+        run: ls -R
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
