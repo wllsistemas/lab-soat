@@ -23,12 +23,12 @@ jobs:
       - name: Lendo diretório de cache do Composer
         id: composer-cache
         working-directory: ./backend
-        run: echo "::set-output name=dir::$(composer config cache-dir)"
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
       - name: Analisando cache do Composer
         uses: actions/cache@v3
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
+          path: ${{ env.COMPOSER_CACHE_DIR }} 
           key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
